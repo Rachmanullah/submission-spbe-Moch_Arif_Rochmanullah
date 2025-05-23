@@ -1,0 +1,10 @@
+const express = require('express');
+const { HandlerGetAllBookProducts, HandlerBookProductByBookID, HandlerBookProductByID, HandlerCreateBookProduct, HandlerUpdateBookProduct, HandlerDeleteBookProduct } = require('../controllers/bookProductController');
+const router = express.Router();
+router.get('/', HandlerGetAllBookProducts);
+router.get('/book/:bookID', HandlerBookProductByBookID);
+router.get('/:productID', HandlerBookProductByID);
+router.post('/', HandlerCreateBookProduct);
+router.put('/:productID', HandlerUpdateBookProduct);
+router.delete('/:productID', HandlerDeleteBookProduct);
+module.exports = router;

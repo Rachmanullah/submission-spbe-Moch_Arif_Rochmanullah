@@ -1,0 +1,12 @@
+const express = require('express');
+const { HandlerGetAllCustomer, HandlerCustomerByID, HandlerCreateCustomer, HandlerUpdateCustomer, HandlerDeleteCustomer } = require('../controllers/customerController');
+const { HandlerRegister, HandlerAuthenticateCustomer } = require('../controllers/authController');
+const router = express.Router();
+router.get('/', HandlerGetAllCustomer);
+router.get('/:customerID', HandlerCustomerByID);
+router.post('/register', HandlerRegister);
+router.post('/login', HandlerAuthenticateCustomer);
+router.post('/', HandlerCreateCustomer);
+router.put('/:customerID', HandlerUpdateCustomer);
+router.delete('/:customerID', HandlerDeleteCustomer);
+module.exports = router;

@@ -61,28 +61,8 @@ exports.FindCartItemByID = async (itemID) => {
 
 exports.FindCartItemByCartID = async (CartID) => {
     try {
-        return await prisma.cartItem.findFirst({
+        return await prisma.cartItem.findMany({
             where: { cartId: CartID },
-            include: {
-                cart: {
-                    include: {
-                        customer: {
-                            select: {
-                                name: true
-                            }
-                        }
-                    }
-                },
-                booksProduct: {
-                    include: {
-                        book: {
-                            select: {
-                                title: true
-                            }
-                        },
-                    }
-                }
-            }
         })
     } catch (error) {
         throw error;
@@ -91,13 +71,14 @@ exports.FindCartItemByCartID = async (CartID) => {
 
 exports.CreateCartItem = async (data) => {
     try {
-        return await prisma.cartItem.create({
-            data: {
-                quantity: data.quantity,
-                booksProductId: data.booksProductId,
-                cartId: data.cartId
-            }
-        })
+        return await prisma.cartItem.createMany({
+            data: data.map((item) => ({
+                quantity: item.quantity,
+                booksProductId: item.booksProductId,
+                cartId: item.cartId
+            })),
+            skipDuplicates: true,
+        });
     } catch (error) {
         throw error;
     }

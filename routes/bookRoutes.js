@@ -1,0 +1,10 @@
+const express = require('express');
+const { HandlerGetAllBooks, HandlerBookByID, HandlerCreateBook, HandlerUpdateBook, HandlerDeleteBook } = require('../controllers/bookController');
+const { verifyToken } = require('../middlewares/auth');
+const router = express.Router();
+router.get('/', verifyToken, HandlerGetAllBooks);
+router.get('/:bookID', verifyToken, HandlerBookByID);
+router.post('/', HandlerCreateBook);
+router.put('/:bookID', HandlerUpdateBook);
+router.delete('/:bookID', HandlerDeleteBook);
+module.exports = router;

@@ -66,8 +66,8 @@ exports.CreateInvoiceItem = async (data) => {
     try {
         return await prisma.invoiceItem.create({
             data: {
-                price: data.price,
-                quantity: data.quantity,
+                price: parseInt(data.price),
+                quantity: parseInt(data.quantity),
                 booksProductId: data.booksProductId,
                 invoiceId: data.invoiceId
             }
@@ -82,8 +82,8 @@ exports.UpdateInvoiceItem = async (itemID, data) => {
         return await prisma.invoiceItem.update({
             where: { id: itemID },
             data: {
-                price: data.price,
-                quantity: data.quantity,
+                price: parseInt(data.price),
+                quantity: parseInt(data.quantity),
                 booksProductId: data.booksProductId,
                 invoiceId: data.invoiceId
             }

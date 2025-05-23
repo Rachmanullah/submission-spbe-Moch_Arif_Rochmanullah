@@ -1,8 +1,11 @@
 const prisma = require("../lib/prismaClient");
 
-exports.FindAllInvoices = async () => {
+exports.FindAllInvoices = async (customerId) => {
     try {
         return await prisma.invoice.findMany({
+            where: {
+                customerId: customerId
+            },
             include: {
                 cart: true
             }
@@ -25,6 +28,19 @@ exports.FindInvoiceByID = async (invoiceID) => {
     }
 }
 
+exports.FindInvoiceByCartID = async (cartID) => {
+    try {
+        return await prisma.invoice.findFirst({
+            where: { cartId: cartID },
+            include: {
+                cart: true,
+            }
+        })
+    } catch (error) {
+        throw error;
+    }
+}
+
 exports.CreateInvoice = async (data) => {
     try {
         return await prisma.invoice.create({
@@ -35,13 +51,13 @@ exports.CreateInvoice = async (data) => {
                 status: data.status,
                 total_amount: data.total_amount,
                 items: {
-                    create: {
-                        price: data.price,
-                        quantity: data.quantity,
-                        booksProductId: data.booksProductId,
-                    }
+                    create: data.itemsCart.map((item) => ({
+                        price: parseInt(item.price),
+                        quantity: parseInt(item.quantity),
+                        booksProductId: item.booksProductId,
+                    }))
                 }
-            }
+            },
         })
     } catch (error) {
         throw error;

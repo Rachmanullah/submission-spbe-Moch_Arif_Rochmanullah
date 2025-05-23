@@ -3,7 +3,11 @@ const bcrypt = require("bcryptjs");
 
 exports.FindAllCustomers = async () => {
     try {
-        return await prisma.customer.findMany()
+        return await prisma.customer.findMany({
+            omit: {
+                password: true,
+            }
+        })
     } catch (error) {
         throw error;
     }
@@ -30,7 +34,9 @@ exports.CreateCustomers = async (data) => {
                 address: data.address,
                 phone: data.phone,
                 carts: {
-                    create: true
+                    create: {
+                        created_at: new Date()
+                    }
                 }
             }
         })
@@ -72,6 +78,30 @@ exports.DestroyCustomer = async (customerID) => {
         return await prisma.customer.delete({
             where: { id: customerID },
         })
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.AuthenticateCustomer = async (email, password) => {
+    try {
+        const customer = await prisma.customer.findFirst({
+            where: {
+                email: email,
+            }
+        });
+
+        if (!customer) {
+            throw new Error("Invalid email or password");
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, customer.password);
+
+        if (!isPasswordValid) {
+            throw new Error("Invalid email or password");
+        }
+
+        return customer;
     } catch (error) {
         throw error;
     }

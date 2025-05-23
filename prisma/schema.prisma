@@ -14,10 +14,10 @@ datasource db {
 }
 
 model Author {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
-  bio       String
-  birthdate DateTime
+  bio       String?
+  birthdate DateTime?
   Book      Book[]
 }
 
@@ -26,21 +26,21 @@ model Book {
   title            String
   isbn             String
   publication_year Int
-  genre            String
-  author           Author         @relation(fields: [authorId], references: [id])
+  genre            String?
+  author           Author?        @relation(fields: [authorId], references: [id])
   authorId         String
-  booksProduct     BooksProduct[]
+  products         BooksProduct[]
 }
 
 model BooksProduct {
   id           String        @id @default(uuid())
   bookId       String
-  book         Book          @relation(fields: [bookId], references: [id])
-  price        Decimal
+  book         Book?         @relation(fields: [bookId], references: [id])
+  price        Int
   stock        Int
-  format       String
+  format       String?
   warehouseId  String
-  warehouse    Warehouse     @relation(fields: [warehouseId], references: [id])
+  warehouse    Warehouse?    @relation(fields: [warehouseId], references: [id])
   cartItems    CartItem[]
   invoiceItems InvoiceItem[]
 }
@@ -48,8 +48,8 @@ model BooksProduct {
 model Warehouse {
   id       String         @id @default(uuid())
   name     String
-  location String
-  capacity Int
+  location String?
+  capacity Int?
   books    BooksProduct[]
 }
 
@@ -58,49 +58,49 @@ model Customer {
   name     String
   email    String
   password String
-  address  String
-  phone    String
+  address  String?
+  phone    String?
   carts    Cart[]
   invoices Invoice[]
 }
 
 model Cart {
   id         String     @id @default(uuid())
-  customer   Customer   @relation(fields: [customerId], references: [id])
+  customer   Customer?  @relation(fields: [customerId], references: [id])
   customerId String
   created_at DateTime   @default(now())
-  cartItems  CartItem[]
+  items      CartItem[]
   invoice    Invoice?
 }
 
 model CartItem {
-  id             String       @id @default(uuid())
+  id             String        @id @default(uuid())
   booksProductId String
-  booksProduct   BooksProduct @relation(fields: [booksProductId], references: [id])
+  products       BooksProduct? @relation(fields: [booksProductId], references: [id])
   quantity       Int
   cartId         String
-  cart           Cart         @relation(fields: [cartId], references: [id])
-  created_at     DateTime     @default(now())
+  cart           Cart?         @relation(fields: [cartId], references: [id])
+  created_at     DateTime      @default(now())
 }
 
 model Invoice {
   id           String        @id @default(uuid())
-  total_amount Decimal
-  issued_at    DateTime      @default(now())
-  status       String
-  customer     Customer      @relation(fields: [customerId], references: [id])
+  total_amount Int
+  issued_at    DateTime?     @default(now())
+  status       String?
+  customer     Customer?     @relation(fields: [customerId], references: [id])
   customerId   String
   cartId       String        @unique
-  cart         Cart          @relation(fields: [cartId], references: [id])
+  cart         Cart?         @relation(fields: [cartId], references: [id])
   items        InvoiceItem[]
 }
 
 model InvoiceItem {
-  id             String       @id @default(uuid())
-  booksProduct   BooksProduct @relation(fields: [booksProductId], references: [id])
+  id             String        @id @default(uuid())
+  products       BooksProduct? @relation(fields: [booksProductId], references: [id])
   booksProductId String
   quantity       Int
-  price          Decimal
-  invoice        Invoice      @relation(fields: [invoiceId], references: [id])
+  price          Int
+  invoice        Invoice?      @relation(fields: [invoiceId], references: [id])
   invoiceId      String
 }
