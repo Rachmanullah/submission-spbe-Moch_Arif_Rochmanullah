@@ -2,11 +2,7 @@ const prisma = require("../lib/prismaClient");
 
 exports.FindAllAuthors = async () => {
     try {
-        return await prisma.author.findMany({
-            include: {
-                Book: true
-            }
-        })
+        return await prisma.author.findMany()
     } catch (error) {
         throw error;
     }
@@ -17,7 +13,11 @@ exports.FindAuthorByID = async (authorID) => {
         return await prisma.author.findFirst({
             where: { id: authorID },
             include: {
-                Book: true
+                Book: {
+                    omit: {
+                        authorId: true
+                    }
+                }
             }
         })
     } catch (error) {

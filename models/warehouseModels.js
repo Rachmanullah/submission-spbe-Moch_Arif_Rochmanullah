@@ -2,11 +2,7 @@ const prisma = require("../lib/prismaClient");
 
 exports.FindAllWarehouse = async () => {
     try {
-        return await prisma.warehouse.findMany({
-            include: {
-                books: true,
-            }
-        })
+        return await prisma.warehouse.findMany()
     } catch (error) {
         throw error;
     }
@@ -17,7 +13,20 @@ exports.FindWarehouseByID = async (warehouseID) => {
         return await prisma.warehouse.findFirst({
             where: { id: warehouseID },
             include: {
-                books: true,
+                products: {
+                    omit: {
+                        warehouseId: true,
+                        bookId: true
+                    },
+                    include: {
+                        book: {
+                            select: {
+                                id: true,
+                                title: true
+                            }
+                        }
+                    }
+                },
             }
         })
     } catch (error) {

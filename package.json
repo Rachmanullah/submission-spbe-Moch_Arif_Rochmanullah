@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "prisma generate && prisma db push --force-reset && npm run seed",
     "start": "nodemon api/index.js",
+    "dev": "nodemon server.js",
     "build": "prisma generate && prisma db push --force-reset && npm run seed",
     "seed": "node prisma/seed.js"
   },

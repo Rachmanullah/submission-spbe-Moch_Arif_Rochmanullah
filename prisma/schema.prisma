@@ -50,7 +50,7 @@ model Warehouse {
   name     String
   location String?
   capacity Int?
-  books    BooksProduct[]
+  products BooksProduct[]
 }
 
 model Customer {
